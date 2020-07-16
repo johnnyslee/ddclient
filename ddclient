@@ -2577,7 +2577,7 @@ sub header_ok {
     if ($line =~ m%^s*HTTP/.*\s+(\d+)%i) {
 	my $result = $1;
 
-	if ($result eq '200') {
+	if ($result =~ m/^2\d\d$/) {
 	    $ok = 1;
 
 	} elsif ($result eq '401') {
