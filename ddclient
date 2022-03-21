@@ -674,16 +674,16 @@ my %services = (
         'updateable' => undef,
         'update'     => \&nic_gandi_update,
         'examples'   => \&nic_gandi_examples,
-        'variables'  => {
-            %{$variables{'service-common-defaults'}},
-            'min-interval' => setv(T_DELAY,  0, 0, 0,               interval('5m')),
-            'server'       => setv(T_FQDNP,  1, 0, 'api.gandi.net', undef),
-            'script'       => setv(T_STRING, 1, 1, '/v5',           undef),
-            'ttl'          => setv(T_DELAY,  0, 0, undef,           interval('5m')),
-            'zone'         => setv(T_FQDN,   1, 0, undef,           undef),
+        'variables'  => merge(
+            { 'min-interval' => setv(T_DELAY,  0, 0, 1, 0,               interval('5m')), },
+            { 'server'       => setv(T_FQDNP,  1, 0, 1, 'api.gandi.net', undef), },
+            { 'script'       => setv(T_STRING, 1, 1, 1, '/v5',           undef), },
+            { 'ttl'          => setv(T_DELAY,  0, 0, 1, undef,           interval('5m')), },
+            { 'zone'         => setv(T_FQDN,   1, 0, 1, undef,           undef), },
             # Unused variables.
-            'login'        => setv(T_STRING, 0, 0, 'unused', undef),
-        }
+            { 'login'        => setv(T_STRING, 0, 0, 1, 'unused',        undef), },
+            $variables{'service-common-defaults'},
+        ),
     },
     'googledomains' => {
         'updateable' => undef,
@@ -5347,13 +5347,7 @@ sub nic_gandi_update {
         $url  = "https://$config{$h}{'server'}$config{$h}{'script'}";
         $url .= "/livedns/domains/$config{$h}{'zone'}/records/$hostname/$rrset_type";
 
-        my $reply = geturl({
-            proxy   => opt('proxy'),
-            url     => $url,
-            headers => $headers,
-            method  => 'PUT',
-            data    => $data,
-        });
+        my $reply = geturl(opt('proxy'), $url, undef, undef, $headers, 'PUT', $data);
         unless ($reply) {
             failed("%s -- Could not connect to %s.", $h, $config{$h}{'server'});
             next;
