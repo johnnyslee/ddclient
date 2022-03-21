@@ -5328,7 +5328,12 @@ sub nic_gandi_update {
     # Update each set configured host.
     foreach my $h (@_) {
         my $ip = delete $config{$h}{'wantip'};
-        (my $hostname = $h) =~ s/\.\Q$config{$h}{zone}\E$//;
+        my $hostname;
+        if ($h eq $config{$h}{zone}) {
+            $hostname = '@';
+        } else {
+            ($hostname = $h) =~ s/\.\Q$config{$h}{zone}\E$//;
+        }
 
         info("%s -- Setting IP address to %s.", $h, $ip);
         verbose("UPDATE:", "updating %s", $h);
