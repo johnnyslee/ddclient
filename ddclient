@@ -436,7 +436,7 @@ my %variables = (
 	'client'              => setv(T_STRING, 0, 1, 1, $program,            undef),
     },
     'nsupdate-common-defaults' => {
-	'ttl'                 => setv(T_NUMBER, 0, 1, 0, 600,                 undef),
+	'ttl'                 => setv(T_DELAY,  0, 1, 0, 600,                 undef),
 	'zone'                => setv(T_STRING, 1, 1, 1, '',                  undef),
 	'tcp'                 => setv(T_BOOL,   0, 1, 1, 0,                   undef),
     },
@@ -447,7 +447,7 @@ my %variables = (
 		'wildcard'            => setv(T_BOOL,   0, 1, 1, 0,                   undef),
 		'mx'	              => setv(T_OFQDN,  0, 1, 1, '',                  undef),
 		'backupmx'            => setv(T_BOOL,   0, 1, 1, 0,                   undef),
-		'ttl'		      => setv(T_NUMBER, 1, 0, 1, 1,                   undef),
+		'ttl'		      => setv(T_DELAY,  1, 0, 1, 1,                   undef),
 	},
 	'googledomains-common-defaults'       => {
 		'server'	      => setv(T_FQDNP,  1, 0, 1, 'domains.google.com', undef),
@@ -605,7 +605,7 @@ my %services = (
 		'variables'  => merge(
 			{ 'server'       => setv(T_FQDNP,  1, 0, 1, 'api.nearlyfreespeech.net', undef) },
 			{ 'min_interval' => setv(T_FQDNP,  0, 0, 1, 0, interval('5m')) },
-			{ 'ttl'          => setv(T_NUMBER, 1, 0, 1, 300, undef) },
+			{ 'ttl'          => setv(T_DELAY,  1, 0, 1, 300, undef) },
 			{ 'zone'         => setv(T_FQDN,   1, 0, 1, undef, undef) },
 			$variables{'service-common-defaults'},
 		),
